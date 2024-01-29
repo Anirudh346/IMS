@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        #loginForm {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        #inventorySection {
+            max-width: 2000px;
+            margin: 0 auto;
+        }
+         button:hover {
+            background-color: #555;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+        }
+
+        button {
+            background-color: black;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="loginForm">
+    <h2>Login - Inventory Management</h2>
+    <label for="username">Username:</label>
+    <input type="text" id="username" required>
+
+    <label for="password">Password:</label>
+    <input type="password" id="password" required>
+
+    <button type="button" onclick="login()">Login</button>
+</div>
+
+<div id="inventorySection" style="display:none;">
+    <h2>Inventory Management</h2>
+
+    <form id="addItemForm">
+        <label for="itemName">Item Name:</label>
+        <input type="text" id="itemName" required>
+
+        <label for="itemQuantity">Quantity:</label>
+        <input type="number" id="itemQuantity" required>
+
+        <button type="button" onclick="addItem()">Add Item</button>
+       
+    </form>
+
+    <table id="inventoryTable">
+        <thead>
+            <tr>
+                <th><button type="button" onclick="sortTable(0)">Item Name</th>
+                <th><button type="button" onclick="sortTable(1)">Quantity</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="inventoryBody">
+    
+        </tbody>
+    </table>
+</div>
+
+<script>
+    function login() {
+        var username = document.getElementById("username").value;
+        var password = document.getElementById("password").value;
+        if (username === "anirudh" && password === "1234") {
+            // Display the inventory management section
+            document.getElementById("loginForm").style.display = "none";
+            document.getElementById("inventorySection").style.display = "block";
+        } else {
+            alert("Invalid username or password");
+        }
+    }
+
+    function addItem() {
+        var itemName = document.getElementById("itemName").value;
+        var itemQuantity = document.getElementById("itemQuantity").value;
+
+        if (itemName && itemQuantity) {
+            var tableBody = document.getElementById("inventoryBody");
+            var newRow = tableBody.insertRow(tableBody.rows.length);
+
+            var cell1 = newRow.insertCell(0);
+            var cell2 = newRow.insertCell(1);
+            var cell3 = newRow.insertCell(2);
+
+            cell1.innerHTML = itemName;
+            cell2.innerHTML = itemQuantity;
+            cell3.innerHTML = '<button type="button" onclick="deleteItem(this)">Delete</button>';
+
+            // Clear the form
+            document.getElementById("itemName").value = "";
+            document.getElementById("itemQuantity").value = "";
+        } else {
+            alert("Please enter item name and quantity.");
+        }
+    }
+
+    function deleteItem(button) {
+        var row = button.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+    }
+     function sortTable(columnIndex) {
+        var table, rows, switching, i, x, y, shouldSwitch;
+        table = document.getElementById("inventoryTable");
+        switching = true;
+
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+
+            for (i = 1; i < rows.length - 1; i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("td")[columnIndex];
+                y = rows[i + 1].getElementsByTagName("td")[columnIndex];
+
+            
+                if (columnIndex === 1) { // Sorting based on quantity (convert to numbers for numeric sorting)
+                    if (parseInt(x.innerHTML) > parseInt(y.innerHTML)) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else { 
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
